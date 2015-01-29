@@ -54,3 +54,19 @@ class User(db.Model):
 
     def __repr__(self):
         return '<name {}'.format(self.name)
+
+
+class Games(db.Model):
+
+    __tablename__ = 'games'
+
+    id = db.Column(db.Integer, primary_key=True)
+    game = db.Column(db.LargeBinary, nullable=False)
+    game_name = db.Column(db.String, nullable=False, unique=True)
+
+    def __init__(self, game, game_name):
+        self.game = game
+        self.game_name = game_name
+
+    def __repr__(self):
+        return '<Game Name {}'.format(self.game)

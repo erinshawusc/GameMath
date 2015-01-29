@@ -31,21 +31,22 @@ def home():
     error = None
     form = MessageForm(request.form)
     if form.validate_on_submit():
+        game_file = request.files['game']
         print form.game.data
         new_message = BlogPost(
             form.title.data,
-            # form.description.data,
-            b64decode(form.game.data),
-            form.game.data,
-            # secure_filename(form.game.data.filename),
+            b64encode(game_file.read()),
+            game_file.filename,
             current_user.id
         )
         db.session.add(new_message)
         db.session.commit()
-        flash('New entry was successfully posted. Thanks.')
+        # flash('New entry was successfully posted. Thanks.')
         return redirect(url_for('home.home'))
     else:
         posts = db.session.query(BlogPost).all()
+        for post in posts:
+            post.game = b64decode(post.game)
         return render_template(
             'index.html', posts=posts, form=form, error=error)
 

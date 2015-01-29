@@ -9,4 +9,4 @@ class MessageForm(Form):
     # description = TextField(
     #     'Description', validators=[DataRequired(), Length(max=140)])
     title = SelectField(u'Game', choices=[('maze', 'Maze Game'), ('shooter', 'Shooter Game'), ('platform', 'Platform Game')])
-    game = FileField('GameFile')
+    game = FileField('game')
