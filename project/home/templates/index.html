@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>Welcome to Flask!</h1>
+<h1>GameMath!</h1>
 <br>
 <p>Click <a href="/logout">here</a> to logout.</p>
 <br>
 
 <!-- post form -->
-<h3>Add a Post!</h3>
+<h3>Upload a Game!</h3>
 <br>
-<form class="form-message" role="form" method="post" action="/">
+<form class="form-message" enctype="multipart/form-data" role="form" method="post" action="/">
   {{ form.csrf_token }}
   <p>
     {{ form.title(placeholder="title") }}
@@ -22,25 +22,33 @@
     </span>
   </p>
   <p>
-  {{ form.description(placeholder="description") }}
+  {{ form.game(placeholder="game") }}
     <span class="error">
-      {% if form.description.errors %}
-        {% for error in form.description.errors %}
+      {% if form.game.errors %}
+        {% for error in form.game.errors %}
           {{ error }}
         {% endfor %}
       {% endif %}
     </span>
   </p>
-  <button class="btn btn-sm btn-success" type="submit">Post</button>
+  <button class="btn btn-sm btn-success" type="submit">Upload</button>
 </form>
 
 <!-- All posts -->
-<h3>Posts:</h3>
+<h3>Exercises</h3>
+<table style="width:100%">
+  <tr>
+    <th> <strong> Games </strong> </th>
+    <th>  <strong> Score </strong> </th>
+    <th>  <strong> Download </strong> </th>
+  </tr>
 {% for post in posts %}
-  <strong>Title:</strong> {{ post.title }} <br>
-  <strong>Post:</strong> {{ post.description }} <br>
-  <strong>Author:</strong> {{ post.author.name }} <br>
-<br>
+  <tr>
+    <td> {{ post.title }} </td>
+    <td> {{ post.author_id }} </td>
+    <td> {{ post.game }} </td>
+  </tr>
 {% endfor %}
+</table>
 
 {% endblock %}

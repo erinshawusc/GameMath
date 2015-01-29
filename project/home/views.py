@@ -2,9 +2,10 @@
 #### imports ####
 #################
 
+from base64 import b64decode, b64encode
 from flask import render_template, Blueprint, request, flash, redirect, url_for
 from flask.ext.login import login_required, current_user
-
+from werkzeug import secure_filename
 from .forms import MessageForm
 from project import db
 from project.models import BlogPost
@@ -30,9 +31,13 @@ def home():
     error = None
     form = MessageForm(request.form)
     if form.validate_on_submit():
+        print form.game.data
         new_message = BlogPost(
             form.title.data,
-            form.description.data,
+            # form.description.data,
+            b64decode(form.game.data),
+            form.game.data,
+            # secure_filename(form.game.data.filename),
             current_user.id
         )
         db.session.add(new_message)
