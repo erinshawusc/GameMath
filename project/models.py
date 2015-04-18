@@ -13,13 +13,15 @@ class BlogPost(db.Model):
     title = db.Column(db.String, nullable=False)
     game = db.Column(db.LargeBinary, nullable=False)
     game_name = db.Column(db.String, nullable=False)
+    game_location = db.Column(db.String, nullable=False)
     author_id = db.Column(db.Integer, ForeignKey('users.id'))
 
-    def __init__(self, title, game, game_name, author_id):
+    def __init__(self, title, game, game_name, author_id, game_location):
         self.title = title
         self.game = game
         self.game_name = game_name
         self.author_id = author_id
+        self.game_location = game_location
 
     def __repr__(self):
         return '<title {}'.format(self.title)

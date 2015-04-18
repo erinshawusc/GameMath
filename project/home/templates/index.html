@@ -46,8 +46,8 @@
   <tr>
     <td> {{ post.title }} </td>
     <td> {{ post.author_id }} </td>
-    {% if post.game %}
-      <td> <a href="{{ post.game_name }}" download="{{post.game_name}}"> {{post.game_name}} </a> </td>
+    {% if post.game_location %}
+      <td> <a href="uploads/{{post.game_name}}" download="uploads/{{post.game_name}}"> {{post.game_name}} </a> </td>
     {% else %}
       <td> N/A </td>
     {% endif %}

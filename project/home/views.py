@@ -1,14 +1,16 @@
 #################
 #### imports ####
 #################
+import os
 
 from base64 import b64decode, b64encode
-from flask import render_template, Blueprint, request, flash, redirect, url_for
+from flask import render_template, Blueprint, request, flash, redirect, url_for, send_from_directory
 from flask.ext.login import login_required, current_user
 from werkzeug import secure_filename
 from .forms import MessageForm
 from project import db
 from project.models import BlogPost
+from project import app
 
 ################
 #### config ####
@@ -19,6 +21,8 @@ home_blueprint = Blueprint(
     template_folder='templates'
 )
 
+upload_folder = os.getcwd() + '/uploads'
+app.config['UPLOAD_FOLDER'] = upload_folder
 
 ################
 #### routes ####
@@ -32,16 +36,20 @@ def home():
     form = MessageForm(request.form)
     if form.validate_on_submit():
         game_file = request.files['game']
+        if game_file:
+            filename = secure_filename(game_file.filename)
+            print 'file path: ' + str(os.path.join(upload_folder, filename))
+            game_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         print form.game.data
         new_message = BlogPost(
             form.title.data,
             b64encode(game_file.read()),
             game_file.filename,
-            current_user.id
+            current_user.id,
+            str(os.path.join(upload_folder, filename))
         )
         db.session.add(new_message)
         db.session.commit()
-        # flash('New entry was successfully posted. Thanks.')
         return redirect(url_for('home.home'))
     else:
         posts = db.session.query(BlogPost).all()
@@ -50,6 +58,9 @@ def home():
         return render_template(
             'index.html', posts=posts, form=form, error=error)
 
+@home_blueprint.route('/uploads/<filename>', methods=['GET', 'POST'])
+def download(filename):
+    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=filename)
 
 @home_blueprint.route('/welcome')
 def welcome():
